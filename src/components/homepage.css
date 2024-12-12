@@ -1,0 +1,70 @@
+/* Colors */
+.text-gold {
+    color: #d4af37;
+  }
+  .text-dark-blue {
+    color: #002855;
+  }
+  .text-light-blue {
+    color: #7daed3;
+  }
+  .bg-light-gray {
+    background-color: #f7f7f7;
+  }
+  .btn-gold {
+    background-color: #d4af37;
+    color: #fff;
+    border: none;
+  }
+  .btn-gold:hover {
+    background-color: #c4992e;
+  }
+  .btn-dark-blue {
+    background-color: #002855;
+    color: #fff;
+    border: none;
+  }
+  .btn-dark-blue:hover {
+    background-color: #001d3a;
+  }
+  
+  /* Buttons and Links */
+  .hover-highlight:hover {
+    text-decoration: underline;
+    color: #d4af37 !important;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    background: url('luxury-home.jpg') center center / cover no-repeat;
+    padding: 100px 0;
+    position: relative;
+  }
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .hero-section h1,
+  .hero-section p {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Animations */
+  .fade-in {
+    animation: fadeIn 1s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
