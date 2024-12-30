@@ -128,7 +128,7 @@ const ProjectListPage = () => {
                           src={donor.donorImage}
                           alt={donor.donorName}
                           className="me-2 rounded-circle"
-                          style={{ width: "30px", height: "30px" }}
+                          style={{ width: "50px", height: "30px" }}
                         />
                         {donor.donorName}
                       </li>

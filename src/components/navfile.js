@@ -104,6 +104,12 @@ const CustomNavbar = () => {
             <Nav.Link href="/donation" style={navLinkStyle} className="hover:bg-blue-600 rounded">
               💰 Donation
             </Nav.Link>
+            <Nav.Link href="/events" style={navLinkStyle} className="hover:bg-blue-600 rounded">
+              Events
+            </Nav.Link>
+            <Nav.Link href="/eventslist" style={navLinkStyle} className="hover:bg-blue-600 rounded">
+              Eventslist
+            </Nav.Link>
           </div>
         </Container>
       </Navbar>

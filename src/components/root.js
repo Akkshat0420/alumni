@@ -11,6 +11,8 @@ import ProtectedRoute from "./protect";
 import DonationPage from "./donationation";
 import ProjectListPage from "./donationlist";
 import HomePage1 from "./home";
+import EmailForm from "./eventscre";
+import EventsList from "./eventlist";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -41,6 +43,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <PostPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/events",
+    element: (
+      <ProtectedRoute>
+        <EmailForm/>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/eventslist",
+    element: (
+      <ProtectedRoute>
+        <EventsList/>
       </ProtectedRoute>
     ),
   },
