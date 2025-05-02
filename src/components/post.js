@@ -67,7 +67,14 @@ const PostPage = () => {
   };
   
   return (
-    <Container className="mt-4">
+    <div     style={{
+        backgroundImage: `url('crepost.webp')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+      }}>
+    <Container className="p-6">
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <div
@@ -126,6 +133,7 @@ const PostPage = () => {
         </Col>
       </Row>
     </Container>
+</div>
   );
 };
 
