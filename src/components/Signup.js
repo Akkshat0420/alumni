@@ -6,8 +6,33 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from './firebase';
 import { createUserWithEmailAndPassword ,signInWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+const universities = {
+  "Dr. A.P.J. Abdul Kalam Technical University (AKTU)": [
+    "Institute of Engineering and Technology (IET)",
+    "KIET Group of Institutions",
+    "Galgotias College of Engineering and Technology",
+    "Kanpur Institute of Technology"
+  ],
+  "Banaras Hindu University (BHU)": [
+    "Institute of Science",
+    "Institute of Medical Sciences",
+    "Faculty of Law"
+  ],
+  "Aligarh Muslim University (AMU)": [
+    "Zakir Husain College of Engineering & Technology",
+    "Jawaharlal Nehru Medical College",
+    "Faculty of Management Studies"
+  ],
+  "University of Lucknow": [
+    "Faculty of Arts",
+    "Institute of Management Sciences",
+    "Faculty of Commerce"
+  ],
+};
+
 const Signup = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "", university: "",
+    college: ""});
   const [isLogin, setIsLogin] = useState(true);
   const [usePhone, setUsePhone] = useState(false); // Toggle for phone authentication
   const [error, setError] = useState("");
@@ -35,7 +60,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, phone, email, password } = formData;
+    const { name, phone, email, password,university,college}=formData;
 
     try {
       if (usePhone) {
@@ -64,7 +89,7 @@ const Signup = () => {
           navigate(`/`);
         } else {
           // Sign up with email/password
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password,university,college);
           const user = userCredential.user;
           await setDoc(doc(db, "users", user.uid), {
             name,
@@ -80,6 +105,8 @@ const Signup = () => {
             skills: [],
             about: "",
             location: "",
+            university:university,
+            college:college
           });
           alert("Account created successfully!");
           navigate(`/`);
@@ -191,6 +218,7 @@ const Signup = () => {
         height:"85%",
         textAlign: "center",
         zIndex: 2,
+        overflowY:'auto'
       }}
     >
       <h1
@@ -227,8 +255,57 @@ const Signup = () => {
                 style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
               />
             </div>
+            
           )}
+         {!isLogin && (
+          <>
+            {/* University Selection */}
+            <div style={{ marginBottom: "1rem" }}>
+              <select
+                name="university"
+                value={formData.university}
+                onChange={handleChange}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option value="">Select University</option>
+                {Object.keys(universities).map((university) => (
+                  <option key={university} value={university}>
+                    {university}
+                  </option>
+                ))}
+              </select>
+            </div>
 
+            {/* College Selection (Filtered Based on University) */}
+            <div style={{ marginBottom: "1rem" }}>
+              <select
+                name="college"
+                value={formData.college}
+                onChange={handleChange}
+                disabled={!formData.university}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option value="">Select College</option>
+                {formData.university &&
+                  universities[formData.university].map((college) => (
+                    <option key={college} value={college}>
+                      {college}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </>
+        )}
           {usePhone ? (
             <>
               <div style={{ marginBottom: "1rem" }}>
