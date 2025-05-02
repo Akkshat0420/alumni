@@ -78,7 +78,7 @@ const PostPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer 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`, 
+          'Authorization': ``, 
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
