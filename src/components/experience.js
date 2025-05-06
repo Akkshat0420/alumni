@@ -6,6 +6,7 @@ import { updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 //import {getAuth } from "firebase/auth"
 import { getAuth } from "firebase/auth";
+import { FaPlus } from "react-icons/fa";
 const ExperiencePage = () => {
   const [experience, setExperience] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -70,7 +71,12 @@ const ExperiencePage = () => {
     await updateDoc(doc(db, "users", userId), { experience: updatedExperience });
     setExperience(updatedExperience);
   };
-
+  const addEducation = () => {
+    setExperience([
+      ...experience,
+      {  title: "", company: "", startDate: "", endDate: "", description: "" },
+    ]);
+  };
   return (
     <div className="container mt-4">
       <h2 >Experience </h2>
@@ -167,6 +173,7 @@ const ExperiencePage = () => {
           )}
         </div>
       )}
+      <FaPlus onClick={addEducation} /> Add Education
     </div>
   );
 };
