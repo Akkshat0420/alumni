@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { collection, getDocs, updateDoc, doc, increment, arrayUnion } from "firebase/firestore";
+import { collection, getDocs,updateDoc,getDoc, doc, increment, arrayUnion } from "firebase/firestore";
 import { FaBookmark, FaShareAlt, FaMoon, FaSun, FaRegThumbsUp, FaRegCommentDots } from "react-icons/fa";
-import { db } from "./firebase";
+import { db} from "./firebase";
 
 const PostsPage1 = () => {
   const [posts, setPosts] = useState([]);
+  // const [user,userData]=useState([]);
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [search, setSearch] = useState("");
   const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
@@ -15,16 +16,50 @@ const PostsPage1 = () => {
       const postsRef = collection(db, "posts");
       try {
         const snapshot = await getDocs(postsRef);
-        const postsData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
+        const postsData = await Promise.all(
+        snapshot.docs.map(async (docSnap) => {
+         
+        
+          const post = { id: docSnap.id, ...docSnap.data() };
+          if (post.userId) {
+            const userRef = doc(db, "users", post.userId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+              post.user = userSnap.data();
+            } else {
+              post.user = { name: "Unknown User" };
+            }
+          }
+
+          return post;
+          
         }));
+        // const useData = await Promise.all(
+        //   snapshot.docs.map(async (docSnap) => {
+        //     const post = { id: docSnap.id, ...docSnap.data() };
+  
+        //     // Fetch user details using userId from post
+        //     if (post.userId) {
+        //       const userRef = doc(db, "users", postuser.userId);
+        //       const userSnap = await getDoc(userRef);
+        //       if (userSnap.exists()) {
+        //         postuser.user = userSnap.data();
+        //       } else {
+        //         postuser.user = { name: "Unknown User" };
+        //       }
+        //     }
+  
+        //     return postuser;
+        //   })
+        // );
+        // userData(useData);
         setPosts(postsData);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
+    
     };
-
+    
     fetchPosts();
   }, []);
 
@@ -73,6 +108,16 @@ const PostsPage1 = () => {
   };
 
   return (
+
+    <div
+    style={{
+      backgroundImage: `url('back1.webp')`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      minHeight: "100vh",
+    }}
+  >
     <div
       className={`container-fluid py-4 ${darkMode ? "bg-dark text-light" : "bg-light text-dark"}`}
       style={{ minHeight: "100vh", transition: "0.4s" }}
@@ -108,19 +153,19 @@ const PostsPage1 = () => {
                 {/* Post Header */}
                 <div className="card-body d-flex align-items-center">
                   <img
-                    src={post.userImage || "https://via.placeholder.com/50"}
+                    src={post.user?.profileImage || "https://via.placeholder.com/50"}
                     alt="Avatar"
                     className="rounded-circle me-3"
                     style={{ width: "50px", height: "50px", objectFit: "cover" }}
                   />
                   <div>
-                    <h6 className="mb-0">{post.username || "User"}</h6>
+                    <h6 className="mb-0">{post.user?.name|| "User"}</h6>
                     <small className="text-muted">{new Date(post.timestamp).toLocaleString()}</small>
                   </div>
                 </div>
 
                 {/* Post Content */}
-                <div className="px-4">
+                <div className="px-4" style={{ whiteSpace:'pre-line'}}>
                   <p>{post.content}</p>
 
                   {/* Post Image(s) */}
@@ -198,6 +243,7 @@ const PostsPage1 = () => {
             </div>
           ))}
       </div>
+    </div>
     </div>
   );
 };
