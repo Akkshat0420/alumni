@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { doc, getDoc,updateDoc} from "firebase/firestore";
+import { doc, getDoc,updateDoc,setDoc} from "firebase/firestore";
 //import { useParams } from "react-router-dom";
 //import ProfileUploader from "./profileuload";
 //import ProfilePage1 from "./test";
@@ -14,7 +14,7 @@ import EducationPage from "./education";
 //import PostPage from "./post";
 //import HomePage1 from "./home";
 
-
+import Autocomplete from "react-google-autocomplete";
 const ProfilePage = () => {
  
 
@@ -26,7 +26,8 @@ const ProfilePage = () => {
   const currentUserId = auth.currentUser?.uid;
   const[userdata,setUserdata]=useState(null);
   const[image,setimage]=useState(null);
-  
+  const [location, setLocation] = useState("");
+  const [aboutUs, setAboutUs] = useState("");
   
   useEffect(() => {
     
@@ -82,7 +83,39 @@ const ProfilePage = () => {
     if (field === "course") setIsCourseDropdownVisible(!isCourseDropdownVisible);
     if (field === "stream") setIsStreamDropdownVisible(!isStreamDropdownVisible);
   };
+  const handleSaveLocation = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      await setDoc(
+        userDocRef,
+        {
+          location,
+        },
+        { merge: true } // keeps existing data
+      );
+      console.log("📍 Location saved successfully");
+    } else {
+      console.error("❌ No user logged in");
+    }
+  };
 
+  const handleSaveAbout = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      await setDoc(
+        userDocRef,
+        {
+          aboutUs,
+        },
+        { merge: true }
+      );
+      console.log("📝 About saved successfully");
+    } else {
+      console.error("❌ No user logged in");
+    }
+  };
   return (
    
     <div className="container mt-3">
@@ -115,9 +148,144 @@ const ProfilePage = () => {
           }}
         />
       </div>
+      <h2
+  style={{
+    color: "black",
+    fontWeight: "700",
+    fontSize: "clamp(1.5rem, 2.5vw, 2.5rem)",
+    textAlign: "left",
+   
+    padding: "12px 24px",
+    borderRadius: "20px",
+    boxShadow: "0 8px 24px rgba(99, 102, 241, 0.3)",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)",
+    letterSpacing: "0.5px",
+    marginBottom: "24px",
+  }}
+>
+   {userdata || "User"}!
+</h2>
+      <div
+  style={{
+    padding: "20px",
+    maxWidth: "500px",
+    margin: "0 auto",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "16px",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
+    backdropFilter: "blur(4px)",
+  }}
+>
+  {/* Location Section */}
+  <div style={{ marginBottom: "24px" }}>
+    <label
+      style={{
+        display: "block",
+        fontWeight: "600",
+        fontSize: "14px",
+        marginBottom: "8px",
+        color: "#333",
+      }}
+    >
+      Select Your Location:
+    </label>
+    <Autocomplete
+      apiKey="AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao"
+      onPlaceSelected={(place) => {
+        setLocation(place.formatted_address || place.name);
+      }}
+      options={{ types: ["geocode"] }}
+      defaultValue={location}
+      placeholder="Enter location"
+      className="location-input"
+      style={{
+        width: "100%",
+        padding: "12px 14px",
+        fontSize: "14px",
+        borderRadius: "12px",
+        border: "1px solid #ccc",
+        marginBottom: "12px",
+        outline: "none",
+        boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05)",
+      }}
+    />
+    <button
+      onClick={handleSaveLocation}
+      style={{
+        width: "100%",
+        padding: "10px",
+        backgroundColor: "#4f46e5",
+        color: "#fff",
+        border: "none",
+        borderRadius: "10px",
+        fontWeight: "600",
+        fontSize: "14px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease",
+      }}
+      onMouseOver={(e) => (e.target.style.backgroundColor = "#3730a3")}
+      onMouseOut={(e) => (e.target.style.backgroundColor = "#4f46e5")}
+    >
+      Save Location
+    </button>
+  </div>
+
+  {/* About Us Section */}
+  <div>
+    <label
+      style={{
+        display: "block",
+        fontWeight: "600",
+        fontSize: "14px",
+        marginBottom: "8px",
+        color: "#333",
+      }}
+    >
+      About Us:
+    </label>
+    <textarea
+      rows="3"
+      value={aboutUs}
+      onChange={(e) => setAboutUs(e.target.value)}
+      placeholder="Write about yourself"
+      style={{
+        width: "100%",
+        padding: "12px 14px",
+        fontSize: "14px",
+        borderRadius: "12px",
+        border: "1px solid #ccc",
+        outline: "none",
+        resize: "none",
+        marginBottom: "12px",
+        boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05)",
+      }}
+    />
+    <button
+      onClick={handleSaveAbout}
+      style={{
+        width: "100%",
+        padding: "10px",
+        backgroundColor: "#10b981",
+        color: "#fff",
+        border: "none",
+        borderRadius: "10px",
+        fontWeight: "600",
+        fontSize: "14px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease",
+      }}
+      onMouseOver={(e) => (e.target.style.backgroundColor = "#047857")}
+      onMouseOut={(e) => (e.target.style.backgroundColor = "#10b981")}
+    >
+      Save About
+    </button>
+  </div>
+</div>
 
       {/* User Information */}
-      <h2 style={{ color: "#3f51b5", fontWeight: "bold" }}>Hello, {userdata || "User"}!</h2>
+     
       <div style={{ marginTop: "15px", fontSize: "18px", lineHeight: "1.6", color: "#333" }}>
           <p>
             <strong style={{ color: "#4CAF50" }}>Batch:</strong> {batch || "N/A"}{" "}
@@ -188,18 +356,25 @@ const ProfilePage = () => {
         </div>
 
       {/* Add File Upload Section */}
+
+      {!image && (
       <div style={{ marginTop: "20px", backgroundColor: "#f5f5f5", padding: "15px", borderRadius: "8px", boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)" }}>
         <FileUpload />
-      </div>
+      </div>)}
     </div>
   
       
+
+
+
       
 
       {/* Experiences Section */}
       <div style={{
         background: "linear-gradient(to right, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0.1))",
         padding: "40px 30px",
+        marginTop:"20px",
+        paddingTop:"10px",
         borderRadius: "12px",
         boxShadow: "0 16px 50px rgba(0, 0, 0, 0.3)", // Increased shadow
         maxWidth: "800px",
@@ -218,13 +393,15 @@ const ProfilePage = () => {
         background: "linear-gradient(to right, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0.1))",
         padding: "40px 30px",
         borderRadius: "12px",
+        marginTop:"20px",
+        paddingTop:"10px",
         boxShadow: "0 16px 50px rgba(0, 0, 0, 0.3)", // Increased shadow
         maxWidth: "800px",
         width: "100%",
         height:"80%",
         textAlign: "center",
         zIndex: 2,
-        marginTop:'10px'
+       
       }}>
      
       <EducationPage/>
