@@ -85,9 +85,9 @@ const CustomNavbar = () => {
             <img
               src="https://www.kit.ac.in/wp-content/uploads/2022/03/KIT-Autonomous-full-name.jpg"
               alt="Logo"
-              style={{ width: '90px', height: '50px', marginRight: '20px' }}
+              style={{ width: '80px', height: '45px', marginRight: '90px' }}
             />
-            Alumni Association
+            Alumni Association Portal
           </Navbar.Brand>
 
           {/* Right-side nav links */}
