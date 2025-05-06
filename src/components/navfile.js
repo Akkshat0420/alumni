@@ -104,6 +104,12 @@ const CustomNavbar = () => {
             <Nav.Link href="/donation" style={navLinkStyle} className="hover:bg-blue-600 rounded">
               💰 Donation
             </Nav.Link>
+            <Nav.Link href="/events" style={navLinkStyle} className="hover:bg-blue-600 rounded">
+              Events
+            </Nav.Link>
+            <Nav.Link href="/eventslist" style={navLinkStyle} className="hover:bg-blue-600 rounded">
+              Eventslist
+            </Nav.Link>
           </div>
         </Container>
       </Navbar>
@@ -117,7 +123,7 @@ const CustomNavbar = () => {
         <Offcanvas.Body>
           <Nav className="flex-column">
             <Nav.Link
-              href="#"
+              href="/"
               style={navLinkStyle}
               className="nav-link hover:bg-blue-600"
               onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
@@ -127,7 +133,7 @@ const CustomNavbar = () => {
             </Nav.Link>
 
             <Nav.Link
-              href="#"
+              href="/post"
               style={navLinkStyle}
               className="nav-link hover:bg-blue-600"
               onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
@@ -137,7 +143,7 @@ const CustomNavbar = () => {
             </Nav.Link>
 
             <Nav.Link
-              href="#"
+              href="/projects"
               style={navLinkStyle}
               className="nav-link hover:bg-blue-600"
               onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
@@ -147,7 +153,7 @@ const CustomNavbar = () => {
             </Nav.Link>
 
             <Nav.Link
-              href="#"
+              href="donation"
               style={navLinkStyle}
               className="nav-link hover:bg-blue-600"
               onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
@@ -157,13 +163,33 @@ const CustomNavbar = () => {
             </Nav.Link>
 
             <Nav.Link
-              href="#"
+              href="/profile"
               style={navLinkStyle}
               className="nav-link hover:bg-blue-600"
               onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
               onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
             >
               My Profile
+              <span style={badgeStyle} className="badge">New </span>
+            </Nav.Link>
+            <Nav.Link
+              href="events"
+              style={navLinkStyle}
+              className="nav-link hover:bg-blue-600"
+              onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
+            >
+              Event
+              <span style={badgeStyle} className="badge">New </span>
+            </Nav.Link>
+            <Nav.Link
+              href="/eventlist"
+              style={navLinkStyle}
+              className="nav-link hover:bg-blue-600"
+              onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
+            >
+              Eventslist
               <span style={badgeStyle} className="badge">New </span>
             </Nav.Link>
           </Nav>
