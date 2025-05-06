@@ -10,13 +10,13 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase"; // Your Firebase configuration
 import { getAuth } from "firebase/auth";
-
+//import {axios} from 'axios'
 const ProjectListPage = () => {
   const [projects, setProjects] = useState([]);
   const auth = getAuth();
   const currentUser = auth.currentUser;
 
-  // Fetch projects from Firestore
+  // Fetch projects from backend
   useEffect(() => {
     const fetchProjects = async () => {
       const projectsRef = collection(db, "projects");
@@ -41,69 +41,95 @@ const ProjectListPage = () => {
       alert("Please log in to donate.");
       return;
     }
-
-    const  uid  = currentUser?.uid; // Get the current user's ID
-    const userRef = doc(db, "users", uid); // Reference to the user's document
+  
+    const amount = prompt("Enter the donation amount (in INR):");
+    if (!amount || isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+  
+    const uid = currentUser?.uid;
+    const userRef = doc(db, "users", uid);
     const projectRef = doc(db, "projects", projectId);
     const donorsCollectionRef = collection(db, "donors");
-
+  
     try {
-      // Fetch the current user's details
       const userDoc = await getDoc(userRef);
       if (!userDoc.exists()) {
         alert("User details not found.");
         return;
       }
-
+  
       const userData = userDoc.data();
       const { name, profileImage } = userData;
-
-      // Find the selected project
       const project = projects.find((proj) => proj.id === projectId);
-
-      // Update the project's donors array in Firestore
-      await updateDoc(projectRef, {
-        donors: arrayUnion({
-          donorId: uid,
-          donorName: name || "Anonymous",
-          donorImage: profileImage || "https://via.placeholder.com/50",
-        }),
-      });
-
-      // Save donor information in the "donors" collection
-      await addDoc(donorsCollectionRef, {
-        donorId: uid,
-        donorName: name || "Anonymous",
-        donorImage: profileImage || "https://via.placeholder.com/50",
-        projectName: project.name,
-        projectId,
-      });
-
-      // Update local state
-      setProjects((prevProjects) =>
-        prevProjects.map((proj) =>
-          proj.id === projectId
-            ? {
-                ...proj,
-                donors: [
-                  ...(proj.donors || []), // Ensure donors is an array
-                  {
-                    donorId: uid,
-                    donorName: name || "Anonymous",
-                    donorImage: profileImage || "https://via.placeholder.com/50",
-                  },
-                ],
-              }
-            : proj
-        )
-      );
-
-      alert("Thank you for your donation!");
+  
+     
+      const options = {
+        key: "rzp_test_y4DOSc8PHqcLlC",
+        amount: amount * 100, //to get price in to rupee
+        currency: "INR",
+        name: "Donation",
+        description: `Donation to ${project.name}`,
+        handler: async function (response) {
+          // On successful  payment done then this
+          await updateDoc(projectRef, {
+            donors: arrayUnion({
+              donorId: uid,
+              donorName: name || "Anonymous",
+              donorImage: profileImage || "https://via.placeholder.com/50",
+              amount,
+            }),
+          });
+  
+          await addDoc(donorsCollectionRef, {
+            donorId: uid,
+            donorName: name || "Anonymous",
+            donorImage: profileImage || "https://via.placeholder.com/50",
+            projectName: project.name,
+            projectId,
+            amount,
+            paymentId: response.razorpay_payment_id,
+          });
+  
+          setProjects((prevProjects) =>
+            prevProjects.map((proj) =>
+              proj.id === projectId
+                ? {
+                    ...proj,
+                    donors: [
+                      ...(proj.donors || []),
+                      {
+                        donorId: uid,
+                        donorName: name || "Anonymous",
+                        donorImage: profileImage || "https://via.placeholder.com/50",
+                        amount,
+                      },
+                    ],
+                  }
+                : proj
+            )
+          );
+  
+          alert("Thank you for your donation!");
+        },
+        prefill: {
+          name: name || "Anonymous",
+          email: currentUser.email || "",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+  
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (error) {
-      console.error("Error adding donor:", error);
+      console.error("Error during donation:", error);
       alert("Donation failed. Please try again.");
     }
   };
+  
 
   return (
     <div className="container my-4">
@@ -121,17 +147,19 @@ const ProjectListPage = () => {
                   {project.donors && project.donors.length > 0 ? (
                     project.donors.map((donor, index) => (
                       <li
-                        key={index}
-                        className="list-group-item border-0 bg-light text-dark"
-                      >
-                        <img
-                          src={donor.donorImage}
-                          alt={donor.donorName}
-                          className="me-2 rounded-circle"
-                          style={{ width: "30px", height: "30px" }}
-                        />
-                        {donor.donorName}
-                      </li>
+  key={index}
+  className="list-group-item border-0 bg-light text-dark"
+>
+  <div className="d-flex align-items-center">
+    <img
+      src={donor.donorImage}
+      alt={donor.donorName}
+      className="me-3 rounded-circle"
+      style={{ width: "50px", height: "50px", objectFit: "cover" }}
+    />
+    <span className="fw-semibold">{donor.donorName}</span>
+  </div>
+</li>
                     ))
                   ) : (
                     <li className="list-group-item border-0 bg-light text-secondary">
