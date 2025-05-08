@@ -95,6 +95,7 @@ const Signup = () => {
             name,
             email,
             headline: "",
+            phoneno:phone,
             batch:"",
             course:"",
             stream:"",
@@ -304,16 +305,50 @@ const Signup = () => {
                   ))}
               </select>
             </div>
+            <div style={{ marginBottom: "1rem" }}>
+  <input
+    type="tel"
+    name="phone"
+    placeholder="+91 9876543210"
+    value={formData.phone}
+    onChange={(e) => {
+      const cleaned = e.target.value.replace(/[^\d+]/g, ""); 
+      if (cleaned.length <= 13) {
+        handleChange({ target: { name: "phone", value: cleaned } });
+      }
+    }}
+    pattern="^\+91\d{10}$"
+    title="Phone number should start with +91 followed by 10 digits"
+    required
+    style={{
+      width: "100%",
+      padding: "10px",
+      borderRadius: "6px",
+      border: "1px solid #ccc",
+    }}
+  />
+</div>
+
           </>
         )}
           {usePhone ? (
             <>
-              <div style={{ marginBottom: "1rem" }}>
+             <div style={{ marginBottom: "1rem" }}>
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+              />
+            </div>
+            <div style={{ marginBottom: "1rem" }}>
                 <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={formData.phone}
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={formData.email}
                   onChange={handleChange}
                   style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
                 />
