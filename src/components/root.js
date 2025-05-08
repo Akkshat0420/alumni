@@ -7,6 +7,8 @@ import Profile from "./profile";
 import PostPage from "./post";
 import { AuthProvider } from "./authprovider";
 //import ProtectedRoute from "./ProtectedRoute";
+import EmailForm from "./eventscre";
+import EventsList from "./eventlist";
 import ProtectedRoute from "./protect";
 import DonationPage from "./donationation";
 import ProjectListPage from "./donationlist";
@@ -49,6 +51,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <DonationPage/>
+      </ProtectedRoute>
+    ),
+  },
+   {
+    path: "/events",
+    element: (
+      <ProtectedRoute>
+        <EmailForm/>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/eventslist",
+    element: (
+      <ProtectedRoute>
+        <EventsList/>
       </ProtectedRoute>
     ),
   },
