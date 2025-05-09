@@ -107,7 +107,8 @@ const Signup = () => {
             about: "",
             location: "",
             university:university,
-            college:college
+            college:college,
+             type:"student"
           });
           alert("Account created successfully!");
           navigate(`/`);
