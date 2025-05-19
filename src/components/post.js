@@ -1,10 +1,23 @@
-import React, { useState } from "react";
-import { Button, Form, Container, Row, Col } from "react-bootstrap";
-import { db } from "./firebase"; 
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import React, { useState, useRef } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  BsCameraVideoFill,
+  BsImage,
+  BsEmojiSmile,
+  BsArrowLeft,
+} from "react-icons/bs";
+import {
+  Camera,
+  Image as ImageIcon,
+  ThumbsUp,
+  Edit,
+  Trash,
+  Send,
+  MoreHorizontal,
+  MessageCircle,
+} from "lucide-react";
 
-const PostPage = () => {
+/*const PostPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
@@ -115,100 +128,269 @@ const PostPage = () => {
     } finally {
       setIsGenerating(false);
     }
+  };*/
+
+export default function CreatePost() {
+  const [postText, setPostText] = useState("");
+  const [media, setMedia] = useState(null);
+  const [showReactions, setShowReactions] = useState(false);
+  const [selectedReaction, setSelectedReaction] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [cameraStream, setCameraStream] = useState(null);
+  const [showFeelings, setShowFeelings] = useState(false);
+  //const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [showComment, setShowComment] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [posts, setPosts] = useState([]);
+  const videoRef = useRef(null);
+
+  const handleMediaChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setMedia(URL.createObjectURL(file));
+    }
   };
-  
+
+  const handleReaction = (reaction) => {
+    setSelectedReaction(reaction);
+    setShowReactions(false);
+  };
+
+  const toggleReactions = () => {
+    setShowReactions(!showReactions);
+  };
+
+  const openCamera = () => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then((stream) => {
+        setCameraStream(stream);
+        videoRef.current.srcObject = stream;
+      })
+      .catch(() => alert("Camera access denied or not supported."));
+  };
+
+  const clearPost = () => {
+    setPostText("");
+    setMedia(null);
+    setSelectedReaction(null);
+    setLiked(false);
+    setCommentText("");
+    setShowComment(false);
+    if (cameraStream) cameraStream.getTracks().forEach((track) => track.stop());
+  };
+
+  const createPost = () => {
+    if (postText || media || cameraStream) {
+      const newPost = { text: postText, media, reaction: selectedReaction };
+      setPosts([newPost, ...posts]);
+      clearPost();
+    }
+  };
+
+  const deletePost = (index) => {
+    setPosts(posts.filter((_, i) => i !== index));
+  };
+
+  const handlePost = () => {
+    if (postText.trim() || media) {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+      clearPost();
+    }
+  };
+
+  const toggleEdit = () => alert("Edit Post");
+  const setShowDeleteModal = () => alert("Delete Post");
 
   return (
     <div
-      style={{
-        backgroundImage: `url('crepost.webp')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
-      }}
+      className="card p-4 shadow-sm mb-4"
+      style={{ maxWidth: "500px", margin: "auto" }}
     >
-      <Container className="p-6">
-        <Row className="justify-content-center">
-          <Col md={8} lg={6}>
-            <div
-              className="bg-light p-4 rounded shadow-sm"
-              style={{
-                background: "linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0.1))",
-              }}
-            >
-              <h2 className="text-center mb-4">Create a New Post</h2>
+      <div className="d-flex align-items-center mb-3">
+        <img
+          src="avatar_image.webp"
+          alt="User Avatar"
+          style={{
+            borderRadius: "50%",
+            marginRight: "10px",
+            width: "40px",
+            height: "40px",
+            objectFit: "cover",
+          }}
+        />
+        <input
+          type="text"
+          placeholder="What's on your mind, Aditya?"
+          value={postText}
+          onChange={(e) => setPostText(e.target.value)}
+          className="form-control"
+          style={{ borderRadius: "20px" }}
+        />
+      </div>
 
-              
-              <Form onSubmit={handlePostSubmit}>
-               
-                <Form.Group controlId="aiPrompt">
-                  <Form.Label>Give Prompt for AI (optional)</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter prompt for AI to generate title and content..."
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                  />
-                  <div className="text-center mt-2">
-                    <Button
-                      variant="success"
-                      onClick={handleGenerateWithAI}
-                      disabled={isGenerating}
-                    >
-                      {isGenerating ? "Generating..." : "Generate with AI"}
-                    </Button>
-                  </div>
-                </Form.Group>
+      <div className="d-flex justify-content-between mb-3">
+        <button className="btn btn-danger" onClick={openCamera}>
+          <BsCameraVideoFill /> Live Video
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => document.getElementById("mediaInput").click()}
+        >
+          <BsImage /> Photo/Video
+        </button>
+        <input
+          type="file"
+          id="mediaInput"
+          accept="image/*,video/*"
+          style={{ display: "none" }}
+          onChange={handleMediaChange}
+        />
+        <button
+          className="btn btn-warning"
+          onClick={() => setShowFeelings(true)}
+        >
+          <BsEmojiSmile /> Feeling/Activity
+        </button>
+      </div>
 
-               
-                <Form.Group controlId="postTitle" className="mt-4">
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter Post Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+      {showFeelings && (
+        <div className="position-fixed w-100 h-100 top-0 start-0 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center">
+          <div
+            className="bg-white p-4 rounded shadow"
+            style={{ width: "300px" }}
+          >
+            <BsArrowLeft
+              size={24}
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowFeelings(false)}
+            />
+            <h5>Select Feeling/Activity</h5>
+            <div>😀 Happy 😢 Sad 😍 In Love 😡 Angry 😴 Sleepy</div>
+          </div>
+        </div>
+      )}
 
-               
-                <Form.Group controlId="postContent" className="mt-3">
-                  <Form.Label>Content</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={5}
-                    placeholder="Write your post here..."
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+      {media ? (
+        media.includes("video") ? (
+          <video src={media} controls className="w-100 rounded mb-3" />
+        ) : (
+          <img src={media} alt="Post Media" className="w-100 rounded mb-3" />
+        )
+      ) : (
+        cameraStream && (
+          <video ref={videoRef} autoPlay className="w-100 rounded mb-3" />
+        )
+      )}
 
-               
-                <Form.Group controlId="postImage" className="mt-3">
-                  <Form.Label>Upload Image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setImage(e.target.files[0])}
-                  />
-                </Form.Group>
+      <div className="d-flex justify-content-between">
+        <button className="btn btn-secondary" onClick={clearPost}>
+          Cancel
+        </button>
+        <button className="btn btn-primary" onClick={createPost}>
+          Post
+        </button>
+      </div>
 
-              
-                <div className="text-center mt-4">
-                  <Button variant="primary" type="submit" disabled={isUploading}>
-                    {isUploading ? "Uploading..." : "Publish Post"}
-                  </Button>
+      {posts.map((post, index) => (
+        <div className="rounded-xl shadow-lg card p-3 mb-3" key={index}>
+          <div className="flex justify-between">
+            <p className="text-lg font-semibold">{post.text}</p>
+            <div className="relative inline-block text-right">
+  <MoreHorizontal onClick={() => setShowOptions(!showOptions)} className="cursor-pointer" />
+  {showOptions && (
+    <div 
+      className="absolute right- mt-2 bg-white p-2 shadow-md rounded-lg w-32 text-left" 
+      style={{ minWidth: '150px' }}
+    >
+      <p 
+        className="cursor-pointer hover:text-blue-500 px-2 py-1" 
+        onClick={toggleEdit}
+      >
+        Edit Post
+      </p>
+      <p 
+        className="cursor-pointer px-2 py-1" 
+        style={{ color: 'red', fontWeight: '500' }} 
+        onClick={setShowDeleteModal}
+      >
+        Delete Post
+      </p>
+    </div>
+  )}
+</div>
+
+          </div>
+
+          {post.media && (
+            <img
+              src={post.media}
+              alt="Post Media"
+              className="w-full rounded-lg mt-3"
+            />
+          )}
+
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <div className="position-relative">
+              <button
+                className="btn btn-light"
+                onClick={() => setLiked(!liked)}
+                onMouseEnter={() => setShowReactions(true)}
+                onMouseLeave={() => setShowReactions(false)}
+              >
+                {liked ? "👍 Liked" : "👍 Like"}
+              </button>
+              {showReactions && (
+                <div
+                  className="position-absolute"
+                  style={{
+                    top: "-40px",
+                    left: "0",
+                    display: "flex",
+                    gap: "5px",
+                  }}
+                >
+                  <span onClick={() => handleReaction("😀 Happy")}>😀</span>
+                  <span onClick={() => handleReaction("❤️ Love")}>❤️</span>
+                  <span onClick={() => handleReaction("😢 Sad")}>😢</span>
+                  <span onClick={() => handleReaction("😡 Angry")}>😡</span>
+                  <span onClick={() => handleReaction("😮 Wow")}>😮</span>
                 </div>
-              </Form>
+              )}
             </div>
-          </Col>
-        </Row>
-      </Container>
+
+            <button
+              className="btn btn-light"
+              onClick={() => setShowComment(!showComment)}
+            >
+              💬 Comment
+            </button>
+            <button className="btn btn-light">🔄 Share</button>
+          </div>
+
+          {showComment && (
+            <div className="mt-3">
+              <input
+                type="text"
+                placeholder="Write a comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200"
+              />
+            </div>
+          )}
+        </div>
+      ))}
+
+      {showToast && (
+        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-3 rounded shadow-md">
+          Post created successfully!
+        </div>
+      )}
     </div>
   );
-};
-
-export default PostPage;
+}
