@@ -15,6 +15,7 @@ import {
   Send,
   MoreHorizontal,
   MessageCircle,
+  Share2
 } from "lucide-react";
 
 /*const PostPage = () => {
