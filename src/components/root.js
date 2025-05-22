@@ -231,6 +231,14 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+    {
+    path: "/post-job",
+    element: (
+      <ProtectedRoute>
+       <JobPostForm/>
+      </ProtectedRoute>
+    ),
+  },
   {
     path: "/dashboard",
     element: (
