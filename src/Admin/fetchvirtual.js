@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card, Button, Row, Col, Spinner, Alert } from "react-bootstrap";
-import { auth, db } from "./firebase";
+import {  db,auth } from "../components/firebase";
 import { collection, getDocs, query, where, getDoc, doc } from "firebase/firestore";
 
 export default function CollegeMeetings() {
