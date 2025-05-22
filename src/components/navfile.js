@@ -96,7 +96,8 @@ const CustomNavbar = () => {
  { label: "Profile", href: "/alumni-profile" },
          { label: "Student-Profile", href: "/profile" },
          { label: "College", href: "college-profile" },
-         
+          { label: "Create Virtual", href: "/create-virtual" },
+         { label: "Donation-create", href: "/donation-create" },
          { label: "Dashboard", href: "/dashboard" },
         { label: "Share Opportunities", href: "/share-opportunities" },
         { label: "Mobile App", href: "/mobile-app" },
