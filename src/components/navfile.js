@@ -168,7 +168,7 @@ const CustomNavbar = () => {
 
           <Col xs="auto" className="pe-3">
             <div style={{ lineHeight: "1" }}>
-              <div style={{ fontSize: "32px", color: "#f26924", fontWeight: "bold" }}>MNNIT</div>
+              <div style={{ fontSize: "32px", color: "#f26924", fontWeight: "bold" }}>KIT</div>
               <div
                 style={{
                   fontSize: "13px",
@@ -189,11 +189,11 @@ const CustomNavbar = () => {
 
           <Col xs="auto">
             <div style={{ fontSize: "15px", color: "#222", lineHeight: "1.4" }}>
-              Motilal Nehru
+              Kanpur 
               <br />
-              National Institute Of
+               Institute Of
               <br />
-              Technology, Allahabad
+              Technology, Kanpur
             </div>
           </Col>
 
