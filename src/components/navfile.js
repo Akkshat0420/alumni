@@ -92,17 +92,10 @@ const CustomNavbar = () => {
         { label: "college-book", href: "/college-book", isNew: true },
        
       {
-  label: "Profile",
-  href:
-    userType === "college"
-      ? "/college-profile"
-      : userType === "student"
-      ? "/alumni-profile"
-      : userType === "student0"
-      ? "/student-corner"
-      : "/profile", // fallback if userType is null
-},
 
+ { label: "Profile", href: "/alumni-profile" },
+         { label: "Student-Profile", href: "/profile" },
+         { label: "College", href: "college-profile" },
          
          { label: "Dashboard", href: "/dashboard" },
         { label: "Share Opportunities", href: "/share-opportunities" },
