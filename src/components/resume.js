@@ -1,79 +1,125 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ProfilePage = () => {
   return (
-    <div className="container my-2">
-      <div className="card shadow-lg p-4">
-        <header className="text-center">
-          <h1>Akkshat kumar Gautam</h1>
-          <p>
-            <a href="mailto:gakkshat1198@gmail.com">gakkshat1198@gmail.com</a> | Mobile: +91 8960466711
+    <div className="container my-4">
+      <div className="card shadow p-4">
+        <header className="text-center mb-4">
+          <h1 className="fw-bold">Akkshat Kumar Gautam</h1>
+          <p className="mb-1">
+            <a href="mailto:gakkshat1198@gmail.com" className="text-primary text-decoration-underline">
+              gakkshat1198@gmail.com
+            </a>{' '}
+            | Mobile: +91 8960466711
           </p>
           <p>
-            <a href="https://github.com/Akkshat0420">Akkshat0420 (GitHub)</a> | 
-            <a href="https://www.linkedin.com/in/akkshat-kumar-gautam-93b392226"> Akkshat (LinkedIn)</a>
+            <a
+              href="https://github.com/Akkshat0420"
+              className="text-primary text-decoration-underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub: Akkshat0420
+            </a>{' '}
+            |{' '}
+            <a
+              href="https://www.linkedin.com/in/akkshat-kumar-gautam-93b392226"
+              className="text-primary text-decoration-underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn: Akkshat
+            </a>
           </p>
         </header>
 
-        <section className="my-4">
-          <h3>EDUCATION</h3>
-          <p><strong>Kanpur Institute of Technology</strong>, Kanpur, India</p>
-          <p>Bachelor of Technology : Computer Science & Engineering; GPA: 7.8 (November 2021..)</p>
-          <p><strong>Vivekanand S S M Inter College</strong>, Unnao, India</p>
-          <p>Intermediate; Percantage: 79% (June 2019 - August 2020)</p>
-          <p>HighSchool; Percantage: 86.33% (June 2017 - August 2018)</p>
-          
-          
+        <section className="mb-4">
+          <h3 className="fw-semibold border-bottom pb-1">Professional Summary</h3>
+          <p>
+            Motivated <strong>Full-Stack & App Developer</strong> focusing on <strong>Flutter</strong> and <strong>Firebase</strong>,
+            with foundations in <strong>React.js</strong>, <strong>Next.js</strong>, <strong>Node.js</strong>, and <strong>MongoDB</strong>.
+            Gained hands-on experience through academic and personal projects including <strong>repairing and selling platforms</strong>,
+            <strong>stock dashboards</strong>, and <strong>alumni portals</strong>. Passionate about real-world solutions,
+            problem-solving, and continuous learning.
+          </p>
         </section>
 
-        <section className="my-4">
-          <h3>SKILLS SUMMARY</h3>
-          <ul>
-            <li><strong>Languages:</strong> Python, SQL, Javscript,Dart</li>
-            <li><strong>Frameworks:</strong> Flutter, Numpy ,Matplotlib,Django,Express,React(Library)</li>
-            <li><strong>Tools:</strong>  FireBase, PowerPoint, MongoDb, MySQL, SQLite</li>
-            <li><strong>Platforms:</strong> PyCharm, Visual Studio Code</li>
-            
+        <section className="mb-4">
+          <h3 className="fw-semibold border-bottom pb-1">Education</h3>
+          <p><strong>Kanpur Institute of Technology</strong>, Kanpur, India</p>
+          <p>B.Tech in Computer Science & Engineering | GPA: 7.8 | Nov 2021 – Present</p>
+          <p><strong>Vivekanand S S M Inter College</strong>, Unnao, India</p>
+          <p>Intermediate: 79% (2019 - 2020) | High School: 86.33% (2017 - 2018)</p>
+        </section>
+
+        <section className="mb-4">
+          <h3 className="fw-semibold border-bottom pb-1">Technical Skills</h3>
+          <ul className="list-unstyled">
+            <li><strong>Languages:</strong> Dart, JavaScript, Python</li>
+            <li><strong>Mobile Development:</strong> Flutter, Firebase, REST APIs, Push Notifications</li>
+            <li><strong>Backend & Web:</strong> Node.js, Express.js, Django, MongoDB Atlas (Configration)</li>
+           
+            <li><strong>Tools:</strong>  GitHub, VS Code, PyCharm, Postman</li>
+            <li><strong>Platforms:</strong>  Firebase Console, Flutter </li>
           </ul>
         </section>
-        
-        
 
-        <section className="my-4">
-          <h3>PROJECTS</h3>
+        <section className="mb-4">
+          <h3 className="fw-semibold border-bottom pb-1">Project Experience</h3>
+
           <div className="mb-3">
-            <h5>Attandance with Face Recognisition | LINK <span className="float-right">October 23 - November 2023</span></h5>
+            <h5 className="fw-bold ">
+              Vegan Restaurant App <small className="text-muted">| Flutter + Firebase</small>
+              <span className="float-end text-secondary fw-normal">Sep 2024 – Oct 2024</span>
+            </h5>
             <p>
-            I developed a Face Recognition system using Python and the OpenCV module, integrated with MySQL to store and manage student entry data. This system ensures efficient and accurate identification while maintaining a robust database of student records.</p>
-          </div>
-          <div className="mb-3">
-            <h5>Simple Tweet website | LINK <span className="float-right">april 2024 - May 2024</span></h5>
-            <p>Using Django, HTML, and Bootstrap, I created a simplified version of a Twitter-like website. Users can post tweets and view tweets from others in an interactive, responsive interface. The application focuses on core functionality for seamless user engagement.</p>
-          </div>
-          
-          <div className="mb-3">
-            <h5>Vegan Resturant App| LINK <span className="float-right">September 2024 - October 2024</span></h5>
-            <p>In this project, I used Flutter and Firebase to develop a system where users can place orders through a user app. The restaurant app receives notifications for new orders, allowing staff to accept or reject them, and the corresponding status updates are sent as notifications to the user app. </p>
-          </div>
-          <div>
-          <p> I am currently developing an Alumni Association platform as both a web and mobile application, utilizing the MERN stack and Flutter. This platform includes a comprehensive Alumni Repository, allowing alumni to connect and engage. It also features a Job Portal for career opportunities, a Donation Portal to support projects, Event Announcements for alumni gatherings, and a Feedback system to gather insights and improve engagement. </p>
-          </div>
-        </section>
-        <section className="my-4">
-          <h3>CERTIFICATIONS</h3>
-          <div className="mb-3">
-            <h5>2nd Position in Startup Nexus 2024 <span className="float-right"></span></h5>
-            <p>Achieved second place in the prestigious Startup Nexus 2024 competition, showcasing innovative business ideas and solutions.
+              Built a real-time restaurant ordering app with Flutter. Customers could place and track orders via Firebase Cloud Messaging.
+              Admin panel supported request management. Used state management and Firestore for scalable architecture.
             </p>
           </div>
+
           <div className="mb-3">
-            <h5>Innovation Design and Entrepreneurship Certification by AICTE <span className="float-right"></span></h5>
-            <p>Completed a certification program focused on fostering innovation, design thinking, and entrepreneurial skills, conducted by the All India Council for Technical Education (AICTE).</p>
+            <h5 className="fw-bold ">
+              Alumni Association App <small className="text-muted">| Flutter + MERN Stack</small>
+              <span className="float-end text-secondary fw-normal">Ongoing</span>
+            </h5>
+            <p>
+              Cross-platform portal with features like alumni registration, event announcements, job posts, and donations.
+              Designed for smooth navigation and modular architecture.
+            </p>
           </div>
-          
-         
-         
+
+          <div className="mb-3">
+            <h5 className="fw-bold ">
+              Attendance System <small className="text-muted">| Python + MySQL</small>
+              <span className="float-end text-secondary fw-normal">Oct 2023 – Nov 2023</span>
+            </h5>
+            <p>
+              Desktop app using OpenCV for face-based attendance. Integrated MySQL for logging real-time data and improving accuracy.
+            </p>
+          </div>
+
+          <div className="mb-3">
+            <h5 className="fw-bold ">
+              Twitter Lite <small className="text-muted">| Django + Bootstrap</small>
+              <span className="float-end text-secondary fw-normal">Apr 2024 – May 2024</span>
+            </h5>
+            <p>
+              Mini Twitter clone with tweet posting and login features. Emphasized clean UI and responsive layout using Bootstrap.
+            </p>
+          </div>
         </section>
+
+        <section className="mb-4">
+          <h3 className="fw-semibold border-bottom pb-1">Certifications</h3>
+          <ul>
+            <li><strong>Startup Nexus 2024 – 2nd Place:</strong> Presented a Flutter-based startup idea with real-world value.</li>
+            <li><strong>AICTE Innovation & Design Thinking:</strong> Certified in entrepreneurship, agile UI/UX thinking, and lean startup strategy.</li>
+          </ul>
+        </section>
+
+       
       </div>
     </div>
   );

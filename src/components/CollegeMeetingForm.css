@@ -1,0 +1,90 @@
+/*  
+  
+  .meeting-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+  }
+  
+  .glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(12px);
+    border-radius: 25px;
+    padding: 40px;
+    width: 100%;
+    max-width: 720px;
+    color: #fff;
+  }
+  
+  .form-heading {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  .form-control,
+  .form-select {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+  }
+  
+  .form-control::placeholder,
+  .form-select {
+    color: #ddd;
+  }
+  
+  .form-control:focus,
+  .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  label,
+  .form-label {
+    color: #f1f1f1;
+  }
+  
+  .btn-outline-light {
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-outline-light:hover {
+    background-color: #fff;
+    color: #000;
+  }
+  /* Custom select styling */
+/* .form-select {
+    appearance: none;
+    background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+    border: 2px solid #6a1b9a;
+    border-radius: 12px;
+    padding: 10px 40px 10px 15px;
+    font-weight: 500;
+    color: #4a148c;
+    font-size: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%204%205'%3E%3Cpath%20fill='%234a148c'%20d='M2%200L0%202h4L2%200zM2%205l2-2H0l2%202z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+  }
+  
+  .form-select:focus {
+    border-color: #8e24aa;
+    box-shadow: 0 0 8px rgba(142, 36, 170, 0.4);
+    outline: none;
+  }
+  
+  .form-select option {
+    background: #fff;
+    color: #4a148c;
+    font-weight: 500;
+  }
+  
+   */ 

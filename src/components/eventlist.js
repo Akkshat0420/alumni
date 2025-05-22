@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from './firebase';
 import { auth } from './firebase';
 import { doc,getDoc } from 'firebase/firestore';
+import './CollegeMeetingForm.css';
 const EventsList = () => {
   const [events, setEvents] = useState([]);
   //const [clickedEvents, setClickedEvents] = useState({});
@@ -25,7 +26,7 @@ const EventsList = () => {
       return;
     }
   
-    const userRef = doc(db, 'users', uid);
+    const userRef = doc(db, 'college', uid);
   
     try {
       const userDoc = await getDoc(userRef);

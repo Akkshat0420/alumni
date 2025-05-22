@@ -5,8 +5,33 @@ import { collection, addDoc } from "firebase/firestore";
 
 const DonationPage = () => {
   const [newProject, setNewProject] = useState({ name: "", description: "" });
+  const [college,setCollege]=useState('');
   const navigate = useNavigate();
-
+   const auth = getAuth();
+  
+    // Fetch user's college on mount
+    useEffect(() => {
+      const fetchUserCollege = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+  
+        try {
+          const userRef = doc(db, "college", user.uid);
+          const userSnap = await getDoc(userRef);
+  
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            setCollege(userData.college || ""); // assuming 'college' field exists
+          } else {
+            console.error("User data not found.");
+          }
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+        }
+      };
+  
+      fetchUserCollege();
+    }, []);
   const handleAddProject = async () => {
     if (newProject.name.trim() && newProject.description.trim()) {
       try {
@@ -14,6 +39,7 @@ const DonationPage = () => {
         await addDoc(projectsRef, {
           name: newProject.name,
           description: newProject.description,
+          college,
           donors: [], // Initially empty
         });
         setNewProject({ name: "", description: "" });
@@ -36,8 +62,8 @@ const DonationPage = () => {
   {/* Create New Project Section */}
   <div className="p-4 bg-light rounded shadow-lg">
     <h3 className="text-primary mb-4">Create a New Project</h3>
-    <div className="row g-3">
-      <div className="col-md-6">
+    <div className="row g-3 form-floating">
+      <div className="col-md-6 ">
         <label htmlFor="projectName" className="form-label">
           Project Name
         </label>

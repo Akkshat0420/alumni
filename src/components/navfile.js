@@ -1,181 +1,319 @@
-import React from "react";
-import { Navbar, Nav, Button, Offcanvas, Container } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'tailwindcss/tailwind.css';
+// Inside CustomNavbar.jsx
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Nav, Badge } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const CustomNavbar = () => {
-  const offcanvasStyle = {
-    background: 'linear-gradient(145deg, #1E293B, #3B82F6, #22C55E)', // Modern gradient theme
-    color: '#fff',
-    borderRadius:'3%'
-     // White text
+  const [hoveredMenu, setHoveredMenu] = useState(null);
+  const [userType, setUserType] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+   
+ 
+  const location = useLocation();  // 👈 track current route
+  const navigate = useNavigate();
+  const auth = getAuth();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+        setUserType(null);
+      }
+    });
+  }, []);
+
+  const isHomePage = location.pathname === "/";  // 👈 check if on home page
+
+ 
+  
+  const navItems = [
+    { label: "Home", href: ":shortName-alumni" },
+    {
+      label: "About",
+      href: "/about",
+      submenu: [
+        { label: "Vision", href: "/about/vision" },
+        { label: "Team", href: "/about/team" },
+      ],
+    },
+    {
+      label: "Donation's",
+      href: "/donation",
+      submenu: [
+        { label: "How to Donate", href: "/donation" },
+        { label: "Donor List", href: "/donation/list" },
+      ],
+    },
+    {
+      label: "Student Corner",
+      href: "/student-corner",
+      submenu: [
+        { label: "Resources", href: "/student-corner/resources" },
+        { label: "Internships", href: "/student-corner/internships" },
+      ],
+    },
+    {
+      label: "Chapter",
+      href: "/chapters",
+      submenu: [
+        { label: "Regional", href: "/chapters/regional" },
+        { label: "International", href: "/chapters/international" },
+      ],
+    },
+    {
+      label: "Share Achievements",
+      href: "/achievements",
+      submenu: [
+        { label: "Submit Achievement", href: "/post1" },
+        { label: "View Achievements", href: "/sharedexp" },
+      ],
+    },
+    {
+      label: "Members",
+      href: "/members",
+      submenu: [
+        { label: "Directory", href: "/members/directory" },
+        { label: "Top Contributors", href: "/members/top" },
+      ],
+    },
+    {
+      label: "More",
+      href: "/more",
+      submenu: [
+        { label: "Newsroom", href: "/newsroom" },
+        { label: "Events", href: "/events" },
+        { label: "Gallery", href: "/gallery" },
+       
+        { label: "college-book", href: "/college-book", isNew: true },
+       
+      {
+  label: "Profile",
+  href:
+    userType === "college"
+      ? "/college-profile"
+      : userType === "student"
+      ? "/alumni-profile"
+      : userType === "student0"
+      ? "/student-corner"
+      : "/profile", // fallback if userType is null
+},
+
+         
+         { label: "Dashboard", href: "/dashboard" },
+        { label: "Share Opportunities", href: "/share-opportunities" },
+        { label: "Mobile App", href: "/mobile-app" },
+        {label:'Feedback',herf:"/feedback"},
+        { label: "Help Desk", href: "/help-desk" },
+        { label: "Virtual Meetings", href: "/virtual-meetings" }, // Alumni-specific
+        ...(userType === "college"
+          ? [{ label: "College Dashboard", href: "/college-dashboard" }]
+          : []),
+      ],
+    },
+    {
+      label: "Post Job",
+      href: "/post-job",
+      visible: userType === "college" || userType === "student",
+    },
+    {
+      label: "Contact Us",
+      href: "/contact",
+      submenu: [
+        { label: "Directory", href: "/members/directory" },
+        { label: "Top Contributors", href: "/members/top" },
+      ],
+    },
+  ];
+  
+  
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      setIsLoggedIn(false);
+      navigate("/");
+    });
   };
 
-  const headerStyle = {
-    color: '#22C55E', // Tailwind green for header text
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: '1.5rem',
-    fontFamily: 'Poppins, sans-serif',
+  const handleRegisterLogin = () => {
+    const path = location.pathname;
+
+    if (path.includes("student-corner") || path.includes("job")) {
+      navigate("/signup-student");
+    } else if (path.includes("dashboard")) {
+      navigate("/signup1");
+    } else {
+      navigate("/signup");
+    }
   };
-
-  const navLinkStyle = {
-    color: '#FFFFFF', // White text for nav links
-    padding: '0.8rem 1.2rem',
-    borderRadius: '8px',
-    transition: 'background 0.3s ease',
-    textDecoration: 'none',
-  };
-
-  const navLinkHoverStyle = {
-    backgroundColor: '#2563EB', 
-  };
-
-  const badgeStyle = {
-    backgroundColor: '#F87171',
-    fontSize: '0.8rem',
-    marginLeft: '0.5rem',
-  };
-
-  const navbarStyle = {
-    backgroundColor: '#1E293B', 
-    padding: '15px 0',
-    height: '70px',
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', 
-  };
-
-  const brandStyle = {
-    color: '#22C55E',
-    fontWeight: 'bold',
-    fontSize: '24px',
-    textTransform: 'uppercase',
-    letterSpacing: '2px',
-    fontFamily: 'Poppins, sans-serif',
-    display: 'flex',
-    alignItems: 'center',
-  };
-
-  const buttonStyle = {
-    backgroundColor: '#14B8A6', 
-    borderColor: '#3B82F6',
-    color: '#fff',
-  };
-
-  const [show, setShow] = React.useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+  // 🎯 Full Navbar from here onwards...
   return (
-    <>
-      <Navbar expand="lg" style={navbarStyle}>
-        <Container fluid>
-          {/* Offcanvas toggle button */}
-          <Button
-            variant="outline-light"
-            onClick={handleShow}
-            className="me-2"
-            style={buttonStyle}
-          >
-            &#9776;
-          </Button>
+     <>
+    {location.pathname === "/" ? (
+      <Container fluid className="py-3 text-center" style={{ backgroundColor: "#f8fafc" }}>
+        <h4 className="text-primary fw-bold mb-0">Welcome to Alumni Portal</h4>
+      </Container>
+    ) : (
+  <div>
+      {/* TOP SECTION */}
+      <Container fluid className="border-bottom py-3" style={{ backgroundColor: "#fff" }}>
+        <Row className="align-items-center px-4">
+          <Col xs="auto">
+            <img src="https://mnnit.ac.in/images/logo.png" alt="Logo" width={70} height={70} />
+          </Col>
 
-          {/* Brand */}
-          <Navbar.Brand href="/" className="mx-auto" style={brandStyle}>
-            <img
-              src="https://www.kit.ac.in/wp-content/uploads/2022/03/KIT-Autonomous-full-name.jpg"
-              alt="Logo"
-              style={{ width: '90px', height: '50px', marginRight: '20px' }}
-            />
-            Alumni Association
-          </Navbar.Brand>
+          <Col xs="auto" className="pe-3">
+            <div style={{ lineHeight: "1" }}>
+              <div style={{ fontSize: "32px", color: "#f26924", fontWeight: "bold" }}>MNNIT</div>
+              <div
+                style={{
+                  fontSize: "13px",
+                  textTransform: "uppercase",
+                  color: "#666",
+                  fontWeight: "500",
+                  letterSpacing: "1px",
+                }}
+              >
+                Alumni Association
+              </div>
+            </div>
+          </Col>
 
-          {/* Right-side nav links */}
-          <div className="d-none d-lg-flex align-items-center">
-            <Nav.Link href="/" style={navLinkStyle} className="hover:bg-blue-600 rounded">
-              🏠 Home
-            </Nav.Link>
-            <Nav.Link href="/profile" style={navLinkStyle} className="hover:bg-blue-600 rounded">
-              👤 Profile
-            </Nav.Link>
-            <Nav.Link href="/post" style={navLinkStyle} className="hover:bg-blue-600 rounded">
-              📝 Post
-            </Nav.Link>
-            <Nav.Link href="/donation" style={navLinkStyle} className="hover:bg-blue-600 rounded">
-              💰 Donation
-            </Nav.Link>
-            <Nav.Link href="/events" style={navLinkStyle} className="hover:bg-blue-600 rounded">
-              Events
-            </Nav.Link>
-            <Nav.Link href="/eventslist" style={navLinkStyle} className="hover:bg-blue-600 rounded">
-              Eventslist
-            </Nav.Link>
-          </div>
-        </Container>
-      </Navbar>
+          <Col xs="auto" className="px-2">
+            <div style={{ borderLeft: "2px solid #aaa", height: "40px" }}></div>
+          </Col>
 
-      {/* Offcanvas Menu */}
-      <Offcanvas show={show} onHide={handleClose} placement="start" style={offcanvasStyle}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title style={headerStyle}>Alumni Association</Offcanvas.Title>
-        </Offcanvas.Header>
+          <Col xs="auto">
+            <div style={{ fontSize: "15px", color: "#222", lineHeight: "1.4" }}>
+              Motilal Nehru
+              <br />
+              National Institute Of
+              <br />
+              Technology, Allahabad
+            </div>
+          </Col>
 
-        <Offcanvas.Body>
-          <Nav className="flex-column">
-            <Nav.Link
-              href="#"
-              style={navLinkStyle}
-              className="nav-link hover:bg-blue-600"
-              onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-            >
-              Home
-            </Nav.Link>
+          {/* Login/Logout */}
+          <Col className="text-end">
+            {isLoggedIn ? (
+              <div
+                onClick={handleLogout}
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#000",
+                  cursor: "pointer",
+                }}
+              >
+                LOGOUT
+              </div>
+            ) : (
+              <div
+                onClick={handleRegisterLogin}
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#000",
+                  cursor: "pointer",
+                }}
+              >
+                REGISTER ::: LOGIN
+              </div>
+            )}
+          </Col>
+        </Row>
+      </Container>
 
-            <Nav.Link
-              href="#"
-              style={navLinkStyle}
-              className="nav-link hover:bg-blue-600"
-              onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-            >
-              Create Post
-            </Nav.Link>
+      {/* NAV LINKS */}
+      <div style={{ backgroundColor: "#fff", borderBottom: "2px solid #f26924" }}>
+        <Container>
+          <Nav className="mx-auto">
+            {navItems
+              .filter((item) => item.visible === undefined || item.visible)
+              .map(({ label, href, isNew, submenu }) => (
+                <Nav.Item
+                  key={label}
+                  className="position-relative"
+                  style={{ margin: "0 3px" }}
+                  onMouseEnter={() => setHoveredMenu(label)}
+                  onMouseLeave={() => setHoveredMenu(null)}
+                >
+                  <Nav.Link
+                    href={href}
+                    style={{
+                      padding: "12px 16px",
+                      color: "#000",
+                      fontSize: "12px",
+                      fontWeight: "500",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {label}
+                    {isNew && (
+                      <Badge
+                        bg="warning"
+                        text="dark"
+                        style={{
+                          fontSize: "10px",
+                          verticalAlign: "top",
+                          marginLeft: "4px",
+                        }}
+                      >
+                        NEW
+                      </Badge>
+                    )}
+                  </Nav.Link>
 
-            <Nav.Link
-              href="#"
-              style={navLinkStyle}
-              className="nav-link hover:bg-blue-600"
-              onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-            >
-              Projects
-            </Nav.Link>
-
-            <Nav.Link
-              href="#"
-              style={navLinkStyle}
-              className="nav-link hover:bg-blue-600"
-              onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-            >
-             Donation
-            </Nav.Link>
-
-            <Nav.Link
-              href="#"
-              style={navLinkStyle}
-              className="nav-link hover:bg-blue-600"
-              onMouseEnter={(e) => (e.target.style.backgroundColor = navLinkHoverStyle.backgroundColor)}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-            >
-              My Profile
-              <span style={badgeStyle} className="badge">New </span>
-            </Nav.Link>
+                  {/* Submenu */}
+                  {submenu && hoveredMenu === label && (
+                    <div
+                      className="dropdown-menu"
+                      style={{
+                        display: "block",
+                        position: "absolute",
+                        top: "100%",
+                        left: "0",
+                        zIndex: 1000,
+                        backgroundColor: "#fff",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        padding: "8px 0",
+                        minWidth: "180px",
+                      }}
+                    >
+                      {submenu.map((item) => (
+                        <a
+                          key={item.label}
+                          className="dropdown-item"
+                          href={item.href}
+                          style={{
+                            padding: "8px 20px",
+                            fontSize: "14px",
+                            color: "#000",
+                          }}
+                        >
+                          {item.label}
+                          {item.isNew && (
+                            <Badge bg="warning" text="dark" className="ms-2">
+                              NEW
+                            </Badge>
+                          )}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </Nav.Item>
+              ))}
           </Nav>
-        </Offcanvas.Body>
-      </Offcanvas>
-    </>
+        </Container>
+      </div>
+    </div>
+      )}
+  </>
   );
 };
 

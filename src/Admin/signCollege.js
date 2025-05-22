@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 //import axios from 'axios';
 //import { Form } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
-import { auth, db } from './firebase';
+//import { useNavigate } from 'react-router-dom';
+import { Form } from 'react-bootstrap';
+import { auth, db } from '../components/firebase';
+//import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { createUserWithEmailAndPassword ,signInWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 const universities = {
   "Dr. A.P.J. Abdul Kalam Technical University (AKTU)": [
     "Institute of Engineering and Technology (IET)",
@@ -30,7 +33,7 @@ const universities = {
   ],
 };
 
-const Signup = () => {
+const CollegeSignup = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "", university: "",
     college: ""});
   const [isLogin, setIsLogin] = useState(true);
@@ -38,9 +41,32 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [otpSent, setOtpSent] = useState(false); // To track OTP sent
   const [otp, setOtp] = useState(""); // For OTP input
-  const navigate = useNavigate();
-
+ const navigate = useNavigate();
+   const [image, setImage] = useState(null);
   // Initialize reCAPTCHA for phone authentication
+  
+  const handleImageUpload = async () => {
+    if (!image) return null;
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "qcyqeq7z");
+    formData.append("cloud_name", "dphtfwnx4");
+
+    try {
+      const response = await fetch("https://api.cloudinary.com/v1_1/dphtfwnx4/image/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      return null;
+    }
+  };
+
+
   const setupRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(auth,
       "recaptcha-container",
@@ -60,9 +86,10 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, phone, email, password,university,college}=formData;
+    const {  phone, email, password,university,college}=formData;
 
     try {
+        const imageUrl = await handleImageUpload();
       if (usePhone) {
         if (!otpSent) {
           // Send OTP
@@ -77,7 +104,8 @@ const Signup = () => {
           const confirmationResult = window.confirmationResult;
           await confirmationResult.confirm(otp);
           alert("Phone number verified successfully!");
-          navigate("/"); // Redirect after successful verification
+         // Redirect after successful verification
+         navigate("/dashboard");
         }
       } else {
         if (isLogin) {
@@ -86,33 +114,24 @@ const Signup = () => {
           alert("Login successful");
           const userId=userCred.user.uid;
           console.log("This is userId:",userId);
-          navigate(`/`);
+          navigate("/dashboard");
         } else {
           // Sign up with email/password
           const userCredential = await createUserWithEmailAndPassword(auth, email, password,university,college);
           const user = userCredential.user;
-          await setDoc(doc(db, "users", user.uid), {
-            name,
+          await setDoc(doc(db, "college", user.uid), {
+           
             email,
             headline: "",
-            phoneno:phone,
-            batch:"",
-            course:"",
-            stream:"",
-            profileImage: "",
-            connections: [],
-            experiences: [],
-            education: [],
-            skills: [],
-            about: "",
+            
+            profileImage: imageUrl,
             location: "",
             university:university,
             college:college,
-            approved:false,
-            type:"student"
+             type:"college"
           });
           alert("Account created successfully!");
-          navigate(`/`);
+          navigate("/dashboard");
         }
       }
     } catch (error) {
@@ -241,25 +260,13 @@ const Signup = () => {
           color: "#555",
         }}
       >
-        Build lasting connections with your fellow alumni.
+        Give strength to your roots.
       </p>
 
       {/* Signup Form */}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
-          {!isLogin && !usePhone && (
-            <div style={{ marginBottom: "1rem" }}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleChange}
-                style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
-              />
-            </div>
-            
-          )}
+         
          {!isLogin && (
           <>
             {/* University Selection */}
@@ -330,31 +337,19 @@ const Signup = () => {
     }}
   />
 </div>
-
+ <Form.Group controlId="postImage" className="mb-3">
+                  <Form.Label>Upload College Logo</Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                  />
+                </Form.Group>
           </>
         )}
           {usePhone ? (
             <>
-             <div style={{ marginBottom: "1rem" }}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleChange}
-                style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
-              />
-            </div>
-            <div style={{ marginBottom: "1rem" }}>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  value={formData.email}
-                  onChange={handleChange}
-                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
-                />
-              </div>
+             
               {otpSent && (
                 <div style={{ marginBottom: "1rem" }}>
                   <input
@@ -442,4 +437,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default CollegeSignup;
