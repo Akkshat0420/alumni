@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { db } from './firebase';
-import { auth } from './firebase'; // Make sure this is imported
+import { auth } from './firebase';
 import { Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -25,7 +25,6 @@ const CollegeMeetingForm = () => {
       try {
         const userRef = doc(db, "college", user.uid);
         const userSnap = await getDoc(userRef);
-
         if (userSnap.exists()) {
           const userData = userSnap.data();
           setCollege(userData.college || "");
@@ -107,126 +106,147 @@ const CollegeMeetingForm = () => {
     }
   };
 
-  const containerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '60px 20px',
-  };
-
-  const cardStyle = {
-    background: 'rgba(255, 255, 255, 0.15)',
-    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-    backdropFilter: 'blur(12px)',
-    borderRadius: '25px',
-    padding: '40px',
-    width: '100%',
-    maxWidth: '720px',
-    color: '#fff'
-  };
-
-  const inputStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    border: 'none',
-    color: '#fff'
-  };
-
-  const selectStyle = {
-    ...inputStyle,
-    appearance: 'none',
-    background: 'linear-gradient(135deg, #e0f7fa, #e1bee7)',
-    border: '2px solid #6a1b9a',
-    borderRadius: '12px',
-    padding: '10px 40px 10px 15px',
-    fontWeight: '500',
-    color: '#4a148c',
-    fontSize: '16px',
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%234a148c' d='M2 0L0 2h4L2 0zM2 5l2-2H0l2 2z'/%3E%3C/svg%3E")`,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right 10px center',
-    backgroundSize: '12px'
-  };
-
   return (
-    <div style={containerStyle}>
-      <div style={cardStyle}>
-        <h2 style={{ textAlign: 'center', fontSize: '1.8rem', color: '#fff', fontWeight: '700' }}>🎥 Schedule a Virtual Meetup</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-floating mb-3">
-            <input type="text" className="form-control" style={inputStyle} placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required />
-            <label>Meeting Title</label>
-          </div>
+    <>
+      <style>{`
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: 'Segoe UI', sans-serif;
+          background: linear-gradient(to right, #1f4037, #99f2c8);
+        }
 
-          <div className="form-floating mb-3">
-            <textarea className="form-control" style={{ ...inputStyle, height: '100px' }} placeholder="Content" value={content} onChange={e => setContent(e.target.value)} required />
-            <label>Meeting Description</label>
-          </div>
+        .meeting-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 20px;
+        }
 
-          <div className="form-floating mb-3">
-            <input type="text" className="form-control" style={inputStyle} placeholder="Image URL" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
-            <label>Banner Image URL</label>
-          </div>
+        .glass-card {
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(14px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+          padding: 30px;
+          width: 100%;
+          max-width: 750px;
+          color: #fff;
+        }
 
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label style={{ color: '#f1f1f1' }}>Batch</label>
-              <select className="form-select" style={selectStyle} value={batch} onChange={e => setBatch(e.target.value)} required>
-                <option value="">Select Batch</option>
-                <option>Batch 2020</option>
-                <option>Batch 2021</option>
-                <option>Batch 2022</option>
-                <option>Batch 2023</option>
-                <option>Batch 2024</option>
-                <option>Batch 2025</option>
-                <option>All Batch</option>
-              </select>
+        .form-heading {
+          text-align: center;
+          font-size: 1.8rem;
+          color: #fff;
+          font-weight: 700;
+          margin-bottom: 25px;
+        }
+
+        .form-control,
+        .form-select {
+          background-color: rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          color: #fff;
+          margin-bottom: 15px;
+        }
+
+        .form-label {
+          color: #f1f1f1;
+          margin-bottom: 5px;
+        }
+
+        .form-control::placeholder {
+          color: #ddd;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+          background-color: rgba(255, 255, 255, 0.2);
+          color: #fff;
+        }
+      `}</style>
+
+      <div className="meeting-container">
+        <div className="glass-card">
+          <h2 className="form-heading">🎥 Schedule a Virtual Meetup</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-floating">
+              <input type="text" className="form-control" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required />
+              <label>Meeting Title</label>
             </div>
 
-            <div className="col-md-6 mb-3">
-              <label style={{ color: '#f1f1f1' }}>Stream</label>
-              <select className="form-select" style={selectStyle} value={stream} onChange={e => setStream(e.target.value)} required>
-                <option value="">Select Stream</option>
-                <option>Computer Science</option>
-                <option>Mechanical</option>
-                <option>Electronics</option>
-                <option>BioTech</option>
-                <option>All</option>
-              </select>
+            <div className="form-floating">
+              <textarea className="form-control" style={{ height: '100px' }} placeholder="Content" value={content} onChange={e => setContent(e.target.value)} required />
+              <label>Meeting Description</label>
             </div>
-          </div>
 
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label style={{ color: '#f1f1f1' }}>Course</label>
-              <select className="form-select" style={selectStyle} value={course} onChange={e => setCourse(e.target.value)} required>
-                <option value="">Select Course</option>
-                <option>B.Tech</option>
-                <option>B.Com</option>
-                <option>MCA</option>
-                <option>MBA</option>
-              </select>
+            <div className="form-floating">
+              <input type="text" className="form-control" placeholder="Image URL" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
+              <label>Banner Image URL</label>
             </div>
-          </div>
 
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label style={{ color: '#f1f1f1' }}>Date</label>
-              <input type="date" className="form-control" style={inputStyle} value={date} onChange={e => setDate(e.target.value)} required />
-            </div>
-            <div className="col-md-6">
-              <label style={{ color: '#f1f1f1' }}>Time</label>
-              <input type="time" className="form-control" style={inputStyle} value={time} onChange={e => setTime(e.target.value)} required />
-            </div>
-          </div>
+            <div className="row">
+              <div className="col-md-6">
+                <label className="form-label">Batch</label>
+                <select className="form-select" value={batch} onChange={e => setBatch(e.target.value)} required>
+                  <option value="">Select Batch</option>
+                  <option>Batch 2020</option>
+                  <option>Batch 2021</option>
+                  <option>Batch 2022</option>
+                  <option>Batch 2023</option>
+                  <option>Batch 2024</option>
+                  <option>Batch 2025</option>
+                  <option>All Batch</option>
+                </select>
+              </div>
 
-          <div className="text-center">
-            <button className="btn btn-outline-light px-5 py-2 mt-3" type="submit" disabled={loading}>
-              {loading ? <Spinner animation="border" size="sm" /> : '🚀 Create Meeting'}
-            </button>
-          </div>
-        </form>
+              <div className="col-md-6">
+                <label className="form-label">Stream</label>
+                <select className="form-select" value={stream} onChange={e => setStream(e.target.value)} required>
+                  <option value="">Select Stream</option>
+                  <option>Computer Science</option>
+                  <option>Mechanical</option>
+                  <option>Electronics</option>
+                  <option>BioTech</option>
+                  <option>All</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                <label className="form-label">Course</label>
+                <select className="form-select" value={course} onChange={e => setCourse(e.target.value)} required>
+                  <option value="">Select Course</option>
+                  <option>B.Tech</option>
+                  <option>B.Com</option>
+                  <option>MCA</option>
+                  <option>MBA</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                <label className="form-label">Date</label>
+                <input type="date" className="form-control" value={date} onChange={e => setDate(e.target.value)} required />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Time</label>
+                <input type="time" className="form-control" value={time} onChange={e => setTime(e.target.value)} required />
+              </div>
+            </div>
+
+            <div className="text-center">
+              <button className="btn btn-outline-light px-5 py-2 mt-4" type="submit" disabled={loading}>
+                {loading ? <Spinner animation="border" size="sm" /> : '🚀 Create Meeting'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
