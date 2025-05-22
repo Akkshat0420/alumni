@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "./firebase"; // Your Firebase configuration
 import { collection, addDoc } from "firebase/firestore";
-
+import { getAuth } from 'firebase/auth';
 const DonationPage = () => {
   const [newProject, setNewProject] = useState({ name: "", description: "" });
   const [college,setCollege]=useState('');
