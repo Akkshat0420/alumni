@@ -127,7 +127,7 @@ const router = createBrowserRouter([
     {
     path: "/alumni-profile",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute requiredType={'student'}>
         <Profile />
       </ProtectedRoute>
     ),
@@ -135,7 +135,7 @@ const router = createBrowserRouter([
     {
     path: "/college-profile",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute requiredTyp={'college'}>
         <CollegeProfile/>
       </ProtectedRoute>
     ),
